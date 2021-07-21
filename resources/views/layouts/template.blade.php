@@ -38,8 +38,7 @@
       <div class="navbar-menu-wrapper d-flex align-items-center">
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block"><i
-              class="mdi mdi-cellphone-wireless icon-sm text-primary"></i> Help :
-            number</li>
+              class="mdi mdi-cellphone-wireless icon-sm text-primary"></i> Help : {{ env('HELP_LINE') }}</li>
           <!-- <li class="nav-item dropdown language-dropdown">
             <a class="nav-link dropdown-toggle px-2 d-flex align-items-center" id="LanguageDropdown" href="#"
               data-toggle="dropdown" aria-expanded="false">
@@ -168,8 +167,8 @@
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
               <div class="dropdown-header text-center">
                 <img class="img-md rounded-circle" src="{{ asset('assets/images/faces/avatar.png') }}" alt="Profile image">
-                <p class="mb-1 mt-3 font-weight-semibold">Victor Nyangasi</p>
-                <p class="font-weight-light text-muted mb-0">victor@gmail.com</p>
+                <p class="mb-1 mt-3 font-weight-semibold">{{ session()->get('user')['fname'] }} {{ session()->get('user')['sname'] }}</p>
+                <p class="font-weight-light text-muted mb-0">{{ session()->get('user')['email'] }}</p>
               </div>
               <a href="{{ route('profile') }}" class="dropdown-item">My Profile
                 <!-- <span class="badge badge-pill badge-danger">1</span>
@@ -177,7 +176,7 @@
               </a>
               <a href="{{ route('settings') }}" class="dropdown-item">Settings<i
                   class="dropdown-item-icon ti-comment-alt"></i></a>
-              <a href="" class="dropdown-item">Sign Out<i
+              <a href="{{ route('logout') }}" class="dropdown-item">Sign Out<i
                   class="dropdown-item-icon ti-power-off"></i></a>
             </div>
           </li>
@@ -200,8 +199,8 @@
                 <div class="dot-indicator bg-success"></div>
               </div>
               <div class="text-wrapper">
-                <p class="profile-name">Victor Nyangasi</p>
-                <p class="designation">IN13/12345/12</p>
+                <p class="profile-name">{{ session()->get('user')['fname'] }} {{ session()->get('user')['sname'] }}</p>
+                <p class="designation">{{ strtoupper(str_replace('_', '/', session()->get('auth')['username'])) }}</p>
               </div>
             </a>
           </li>

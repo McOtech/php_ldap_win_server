@@ -4,7 +4,8 @@ namespace App\Http\Traits\AD;
 
 use App\Http\Traits\Utils;
 
-trait User {
+trait User
+{
     use Utils;
 
     /**
@@ -52,7 +53,7 @@ trait User {
             $fillables = [
                 'givenname', 'initials', 'sn', 'cn', 'samaccountname', 'distinguishedname', 'mail', 'mobile', 'instancetype',
                 'useraccountcontrol', 'memberof', 'company', 'department', 'title', 'description', 'physicaldeliveryofficename',
-                'postofficebox', 'postalcode', 'l', 'st', 'co', 'homephone', 'streetaddress', 'telephonenumber'
+                'postofficebox', 'postalcode', 'l', 'st', 'co', 'homephone', 'wwwhomepage', 'streetaddress', 'telephonenumber', 'whencreated'
             ];
             $userObject = [];
             foreach ($user as $key => $value) {
@@ -61,7 +62,9 @@ trait User {
                         $groups = [];
                         foreach ($value as $index => $value) {
                             if (gettype($value) == 'string') {
-                                array_push($groups, $value);
+                                $grps = explode(',', $value);
+                                $grp = explode('=', $grps[0]);
+                                array_push($groups, $grp[1]);
                             }
                         }
                         $userObject[$key] = $groups;

@@ -20,12 +20,20 @@ use Illuminate\Support\Facades\Route;
 Route::get('/register', [AuthController::class, 'register'])->name('register.get');
 Route::post('/register', [AuthController::class, 'store'])->name('register.post');
 Route::get('/login', [AuthController::class, 'login'])->name('login.get');
-Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-Route::get('/settings', [UserController::class, 'settings'])->name('settings');
-Route::get('/ous', [OrganizationUnitController::class, 'index'])->name('ous');
-Route::get('/groups', [GroupController::class, 'index'])->name('groups');
-Route::get('/users', [UserController::class, 'users'])->name('users');
+Route::post('/login', [AuthController::class, 'signin'])->name('login.post');
 
-Route::get('/', function () {
-    return view('welcome');
+/**
+ * Private routes
+ */
+Route::group(['middleware' => ['session.check']], function () {
+    Route::get('/', function () {
+        // return redirect()->route('profile');
+        return view('welcome');
+    });
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::get('/settings', [UserController::class, 'settings'])->name('settings');
+    Route::get('/ous', [OrganizationUnitController::class, 'index'])->name('ous');
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups');
+    Route::get('/users', [UserController::class, 'users'])->name('users');
 });

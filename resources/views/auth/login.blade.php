@@ -14,26 +14,37 @@
             <!-- Alert Message End -->
           @endif
 
-        <form action="#">
+        <form action="{{ route('login.post') }}" method="POST">
+            @csrf
           <div class="form-group">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Registration Number">
+            <div class="input-group pb-3">
+              <input type="text" name="username" value="{{ old('username') }}" class="form-control @error('username') is-invalid @enderror" placeholder="Registration Number" required>
               <div class="input-group-append">
                 <span class="input-group-text">
                   <i class="mdi mdi-account-circle"></i>
                 </span>
               </div>
+                @error('username')
+                    <span class="invalid-feedback" role="alert">
+                        <em>{{ $message }}</em>
+                    </span>
+                @enderror
             </div>
           </div>
 
           <div class="form-group">
-            <div class="input-group">
-              <input type="password" class="form-control" placeholder="Password">
+            <div class="input-group pb-3">
+              <input type="password" name="password" value="{{ old('password') }}" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required>
               <div class="input-group-append">
                 <span class="input-group-text">
                   <i class="mdi mdi-shield-lock"></i>
                 </span>
               </div>
+                @error('password')
+                    <span class="invalid-feedback" role="alert">
+                        <em>{{ $message }}</em>
+                    </span>
+                @enderror
             </div>
           </div>
 

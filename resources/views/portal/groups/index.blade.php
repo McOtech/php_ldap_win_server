@@ -38,28 +38,35 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th>OU</th>
                 <th>Name</th>
                 <th>Members</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Headquarters</td>
-                <td>Administrative</td>
-                <td>24</td>
-                <td>
-                  <button type="button" class="btn btn-rounded btn-icons btn-inverse-primary" title="update">
-                    <i class="mdi mdi-pencil-outline"></i>
-                  </button>
-                  <button type="button" class="btn btn-rounded btn-icons btn-inverse-danger" title="delete">
-                    <i class="mdi mdi-trash-can-outline"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
+                @if (count($groups) > 0)
+                    @foreach ($groups as $key => $group)
+                        <tr>
+                            <td>{{ ($key + 1) }}</td>
+                            <td>{{ (isset($group['name'])) ? $group['name'] : 'N/A' }}</td>
+                            <td>{{ (isset($group['member'])) ? $group['member'] : 0 }}</td>
+                            <td>
+                            <button type="button" class="btn btn-rounded btn-icons btn-inverse-primary" title="update">
+                                <i class="mdi mdi-pencil-outline"></i>
+                            </button>
+                            <button type="button" class="btn btn-rounded btn-icons btn-inverse-danger" title="delete">
+                                <i class="mdi mdi-trash-can-outline"></i>
+                            </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td>No data found</td>
+                    </tr>
+                @endif
+
+              {{-- <tr>
                 <td>2</td>
                 <td>Scientists</td>
                 <td>Research</td>
@@ -86,7 +93,7 @@
                     <i class="mdi mdi-trash-can-outline"></i>
                   </button>
                 </td>
-              </tr>
+              </tr> --}}
             </tbody>
           </table>
         </div>

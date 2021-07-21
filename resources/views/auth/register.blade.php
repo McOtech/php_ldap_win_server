@@ -20,7 +20,7 @@
             <div class="col-lg-6">
                 <div class="form-group pb-3">
                     <div class="input-group">
-                        <input type="text" name="id" class="form-control @error('id') is-invalid @enderror" placeholder="regno/payroll" required>
+                        <input type="text" name="id" value="{{ old('id') }}" class="form-control @error('id') is-invalid @enderror" placeholder="regno/payroll" required>
                         <div class="input-group-append">
                             <span class="input-group-text">
                             <i class="mdi mdi-account-circle"></i>
@@ -38,7 +38,7 @@
             <div class="col-lg-6">
               <div class="form-group pb-3">
                 <div class="input-group">
-                  <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email (example@gmail.com)">
+                  <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" placeholder="Email (example@gmail.com)" required>
                   <div class="input-group-append">
                     <span class="input-group-text">
                       <i class="mdi mdi-email"></i>
@@ -56,7 +56,7 @@
 
           <div class="form-group pb-3">
             <div class="input-group">
-              <input type="tel" name="mobile" class="form-control @error('mobile') is-invalid @enderror" placeholder="Mobile (0712345689)">
+              <input type="tel" name="mobile" value="{{ old('mobile') }}" class="form-control @error('mobile') is-invalid @enderror" placeholder="Mobile (0712345689)" required>
               <div class="input-group-append">
                 <span class="input-group-text">
                   <i class="mdi mdi-cellphone"></i>
@@ -74,7 +74,7 @@
             <div class="col-lg-6">
               <div class="form-group pb-3">
                 <div class="input-group">
-                  <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password">
+                  <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required>
                   <div class="input-group-append">
                     <span class="input-group-text">
                       <i class="mdi mdi-shield-lock"></i>
@@ -91,7 +91,7 @@
             <div class="col-lg-6">
               <div class="form-group">
                 <div class="input-group pb-3">
-                  <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Confirm Password">
+                  <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Confirm Password" required>
                   <div class="input-group-append">
                     <span class="input-group-text">
                       <i class="mdi mdi-shield-lock"></i>

@@ -4,13 +4,14 @@ namespace App\Http\Traits\AD;
 
 use App\Http\Traits\Utils;
 
-trait Group {
+trait Group
+{
     use Utils;
 
     /**
      * Shows groups
      */
-    private function showGroups($connection)
+    private function showGroups($connection, $offset, $size)
     {
         try {
             $domain = env('LDAP_DOMAIN_NAME');
@@ -19,12 +20,23 @@ trait Group {
             $result = ldap_search($connection, "dc={$domain[0]},dc={$domain[1]}", $filter);
             $entries = ldap_get_entries($connection, $result);
             $groups = [];
-            foreach ($entries as $key => $group) {
-                if (gettype($key) == 'integer') {
-                    array_push($groups, $this->getGroupDetails($group));
+            for ($i = $offset; $i < count($entries) && count($groups) <= $size; $i++) {
+                $group = $entries[$i];
+                if (isset($group['iscriticalsystemobject']) && $group['iscriticalsystemobject'][0] == 'TRUE') {
+                    continue;
                 }
+                array_push($groups, $this->getGroupDetails($group));
+                $offset = $i;
             }
-            return $groups;
+            // foreach ($entries as $key => $group) {
+            //     if (gettype($key) == 'integer') {
+            //         if (isset($group['iscriticalsystemobject']) && $group['iscriticalsystemobject'][0] == 'TRUE') {
+            //             continue;
+            //         }
+            //         array_push($groups, $this->getGroupDetails($group));
+            //     }
+            // }
+            return ['groups' => $groups, 'offset' => $offset];
         } catch (\Throwable $th) {
             return $this->alert(env('ERROR_MESSAGE'), $th->getMessage());
         }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Traits\AD\User;
 use App\Http\Traits\Utils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\MessageBag;
 
@@ -12,11 +13,17 @@ class AuthController extends Controller
 {
     use Utils, User;
 
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         return view('auth.register');
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
+        if ($request->session()->has('auth')) {
+            $message = new MessageBag($this->alert(env('WARNING_MESSAGE'), 'You are already logged in! Log out to proceed'));
+            return redirect()->route('profile')->withErrors($message);
+        }
         return view('auth.login');
     }
 
@@ -75,6 +82,63 @@ class AuthController extends Controller
                 $message = new MessageBag($this->alert(env('WARNING_MESSAGE'), "Invalid Registration/Payroll Number! Please check and try again."));
                 return redirect()->back()->withErrors($message);
             }
+        } catch (\Throwable $th) {
+            $message = new MessageBag($this->alert(env('ERROR_MESSAGE'), $th->getMessage()));
+            return redirect()->back()->withErrors($message);
+        }
+    }
+
+    /**
+     * Logs in the User
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function signin(Request $request)
+    {
+        if ($request->session()->has('auth')) {
+            $message = new MessageBag($this->alert(env('WARNING_MESSAGE'), 'You are already logged in! Log out to proceed'));
+            return redirect()->route('profile')->withErrors($message);
+        }
+        $credentials = $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required', 'string']
+        ]);
+
+        try {
+            $username = trim(strtolower(str_replace('/', '_', $credentials['username'])));
+            $password = $credentials['password'];
+            $connection = $this->bindUser($username, $password);
+
+            if (!isset($connection[env('MESSAGE_LITERAL')])) {
+                $auth = [
+                    "username" => $username,
+                    "password" => Crypt::encrypt($password)
+                ];
+                $request->session()->put('auth', $auth);
+                $message = new MessageBag($this->alert(env('SUCCESS_MESSAGE'), 'Logged in successfully.'));
+                return redirect()->route('profile')->withErrors($message);
+            }
+            $message = new MessageBag($this->alert(env('ERROR_MESSAGE'), 'Incorrect credentials! Please check and try again.'));
+            return redirect()->back()->withErrors($message);
+        } catch (\Throwable $th) {
+            $message = new MessageBag($this->alert(env('ERROR_MESSAGE'), $th->getMessage()));
+            return redirect()->back()->withErrors($message);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        try {
+            $request->session()->flush();
+            $message = new MessageBag($this->alert(env('SUCCESS_MESSAGE'), 'Logged out successfully.'));
+            return redirect()->route('login.get')->withErrors($message);
         } catch (\Throwable $th) {
             $message = new MessageBag($this->alert(env('ERROR_MESSAGE'), $th->getMessage()));
             return redirect()->back()->withErrors($message);
